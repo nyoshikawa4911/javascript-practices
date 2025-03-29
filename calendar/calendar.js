@@ -1,9 +1,11 @@
+import { chunk, center } from "./utility.js";
+
+const CALENDAR_WIDTH = 20;
 const WEEK_HEADER = "日 月 火 水 木 金 土";
 const DAYS_IN_WEEK = 7;
 const NUMBER_OF_WEEK_ROWS = 6;
 const NUMBER_OF_CALENDAR_CELLS = DAYS_IN_WEEK * NUMBER_OF_WEEK_ROWS;
 const BLANK = "  ";
-const SPACE = " ";
 
 export default class Calendar {
   #year;
@@ -27,33 +29,22 @@ export default class Calendar {
       NUMBER_OF_CALENDAR_CELLS - forwardBlanks.length - lastDate.getDate(),
     ).fill(BLANK);
     const days = [...Array(lastDate.getDate())].map((_, i) =>
-      String(i + 1).padStart(2, SPACE),
+      String(i + 1).padStart(2, " "),
     );
 
-    return this.#chunk(
+    return chunk(
       [...forwardBlanks, ...days, ...backwardBlanks],
       DAYS_IN_WEEK,
-    ).map((weekDays) => weekDays.join(SPACE));
+    ).map((weekDays) => weekDays.join(" "));
   }
 
   generate() {
-    const titleHeader = this.#center(`${this.#month}月 ${this.#year}`, 20);
+    const titleHeader = center(
+      `${this.#month}月 ${this.#year}`,
+      CALENDAR_WIDTH,
+    );
     return [titleHeader, WEEK_HEADER, ...this.weeks()]
       .map((row) => row.trimEnd())
       .join("\n");
-  }
-
-  #chunk(array, chunkSize) {
-    const chunkArray = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-      chunkArray.push(array.slice(i, i + chunkSize));
-    }
-    return chunkArray;
-  }
-
-  #center(str, length) {
-    const numOfLeftBlanks = Math.trunc((length - str.length) / 2);
-    const numOfRightBlanks = length - str.length - numOfLeftBlanks;
-    return SPACE.repeat(numOfLeftBlanks) + str + SPACE.repeat(numOfRightBlanks);
   }
 }
