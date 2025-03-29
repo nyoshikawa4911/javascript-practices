@@ -16,6 +16,10 @@ export class Calendar {
     this.#month = month;
   }
 
+  get month() {
+    return this.#month;
+  }
+
   weeks() {
     const firstDate = new Date(this.#year, this.#month - 1, 1);
     const lastDate = new Date(
