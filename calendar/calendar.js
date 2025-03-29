@@ -1,13 +1,13 @@
 import { chunk, center } from "./utility.js";
 
-const CALENDAR_WIDTH = 20;
-const WEEK_HEADER = "日 月 火 水 木 金 土";
+export const CALENDAR_WIDTH = 20;
+export const WEEK_HEADER = "日 月 火 水 木 金 土";
 const DAYS_IN_WEEK = 7;
 const NUMBER_OF_WEEK_ROWS = 6;
 const NUMBER_OF_CALENDAR_CELLS = DAYS_IN_WEEK * NUMBER_OF_WEEK_ROWS;
 const BLANK = "  ";
 
-export default class Calendar {
+export class Calendar {
   #year;
   #month;
 
