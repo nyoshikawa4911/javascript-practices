@@ -23,3 +23,7 @@ export const transpose = (matrix) => {
   }
   return result;
 };
+
+export const isInRange = (value, min, max) => {
+  return min <= value && value <= max;
+};
