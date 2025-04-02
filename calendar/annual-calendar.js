@@ -24,9 +24,7 @@ export default class AnnualCalendar {
     );
 
     const annualCalendarRows = quarterly_displays
-      .flatMap((quarterly_display) =>
-        transpose(quarterly_display).map((row) => row.join("  ")),
-      )
+      .flatMap((quarterly_display) => transpose(quarterly_display).map((row) => row.join("  ")))
       .slice(0, -1);
 
     return [center(`${this.#year}`, CALENDAR_WIDTH * 3), ...annualCalendarRows]
