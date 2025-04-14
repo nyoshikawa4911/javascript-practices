@@ -10,5 +10,8 @@
     "globals": "^16.0.0",
     "prettier": "3.5.3"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  }
 }
