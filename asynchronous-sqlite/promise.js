@@ -6,54 +6,42 @@ const insertUser = "INSERT INTO users (name, email) VALUES (?, ?);";
 const selectUser = "SELECT * FROM users WHERE id = ?;";
 const dropUsersTable = "DROP TABLE users;";
 
+const runAsync = (db, sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(this);
+      }
+    });
+  });
+};
+
+const getAsync = (db, sql, params = []) => {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(row);
+      }
+    });
+  });
+};
+
 const database = new sqlite3.Database(":memory:");
 
-new Promise((resolve, reject) => {
-  database.run(createUsersTable, (err) => {
-    if (err) {
-      console.error("テーブル作成時にエラー");
-      reject(err);
-    } else {
-      resolve();
-    }
-  });
-})
+runAsync(database, createUsersTable)
   .then(() => {
-    return new Promise((resolve, reject) => {
-      database.run(insertUser, ["Alice", "alice@example.com"], function (err) {
-        if (err) {
-          console.error("データ挿入時にエラー");
-          reject(err);
-        } else {
-          resolve(this.lastID);
-        }
-      });
-    });
+    return runAsync(database, insertUser, ["Alice", "alice@example.com"]);
   })
-  .then((id) => {
-    return new Promise((resolve, reject) => {
-      database.get(selectUser, id, (err, row) => {
-        if (err) {
-          console.error("データ取得時にエラー");
-          reject(err);
-        } else {
-          resolve(row);
-        }
-      });
-    });
+  .then((result) => {
+    return getAsync(database, selectUser, result.lastID);
   })
   .then((row) => {
     console.log(row);
-    return new Promise((resolve, reject) => {
-      database.run(dropUsersTable, (err) => {
-        if (err) {
-          console.error("テーブル削除時にエラー");
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
-    });
+    return runAsync(database, dropUsersTable);
   })
   .catch((err) => {
     if (err instanceof Error) {
