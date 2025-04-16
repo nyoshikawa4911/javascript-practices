@@ -6,8 +6,8 @@ const insertUser = "INSERT INTO users (name, email) VALUES (?, ?);";
 const selectUser = "SELECT * FROM users WHERE id = ?;";
 const dropUsersTable = "DROP TABLE users;";
 
-const runAsync = (db, sql, params = []) => {
-  return new Promise((resolve, reject) => {
+const runAsync = (db, sql, params = []) =>
+  new Promise((resolve, reject) => {
     db.run(sql, params, function (err) {
       if (err) {
         reject(err);
@@ -16,10 +16,9 @@ const runAsync = (db, sql, params = []) => {
       }
     });
   });
-};
 
-const getAsync = (db, sql, params = []) => {
-  return new Promise((resolve, reject) => {
+const getAsync = (db, sql, params = []) =>
+  new Promise((resolve, reject) => {
     db.get(sql, params, (err, row) => {
       if (err) {
         reject(err);
@@ -28,17 +27,12 @@ const getAsync = (db, sql, params = []) => {
       }
     });
   });
-};
 
 const database = new sqlite3.Database(":memory:");
 
 runAsync(database, createUsersTable)
-  .then(() => {
-    return runAsync(database, insertUser, ["Alice", "alice@example.com"]);
-  })
-  .then((result) => {
-    return getAsync(database, selectUser, result.lastID);
-  })
+  .then(() => runAsync(database, insertUser, ["Alice", "alice@example.com"]))
+  .then((result) => getAsync(database, selectUser, result.lastID))
   .then((row) => {
     console.log(row);
     return runAsync(database, dropUsersTable);
